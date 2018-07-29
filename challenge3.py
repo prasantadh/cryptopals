@@ -13,7 +13,7 @@ weight = {  'a' :  8.167,  'b' : 1.492, 'c' : 2.782, 'd' : 4.253,
 def single_byte_xor(ct):
     score = lambda s: sum([weight[chr(c)] for c in s.lower() if chr(c) in weight.keys()])
     pt =  max([strxor_c(ct, k) for k in range(256)], key=score)
-    return {'key' : ct[0] ^ pt[0], 'pt' : pt, 'score': score(pt)}
+    return {'key' : bytes([ct[0] ^ pt[0]]), 'pt' : pt, 'score': score(pt)}
 
 def main():
     ct = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
