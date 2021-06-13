@@ -73,3 +73,25 @@ def frequency_score(plaintext):
 
     return score
 
+"""
+Compute repeated key xor value for a string
+@input:
+    plaintext [string]: a string to encrypt
+    key [string]: a string to encrypt plaintext with
+@return:
+    [bytes]: plaintext ^ key (repeated) in HEX
+"""
+def encrypt_w_repeated_XOR(plaintext, key):
+
+    if type(plaintext) == type(''):
+        plaintext = plaintext.encode()
+    if type(key) == type(''):
+        key = key.encode()
+
+    ciphertext = b''
+
+    for i in range(len(plaintext)):
+        ciphertext += bytes([plaintext[i] ^ key[i % len(key)]])
+
+    from codecs import encode
+    return encode(ciphertext, 'hex')
