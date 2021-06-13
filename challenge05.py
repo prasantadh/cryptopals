@@ -1,14 +1,6 @@
-from codecs import encode, decode
-from Crypto.Util.strxor import strxor
+from cryptopals import helpers
 
-def repeated_key_xor(pt, key):
-    key = key * (len(pt) // len(key)) + key[:(len(pt) % len(key))]
-    return strxor(pt, key)
+plaintext = "Burning 'em, if you ain't quick and nimble I go crazy when I hear a cymbal"
+key = "ICE"
 
-def main():
-    pt = b"Burning 'em, if you ain't quick and nimble I go crazy when I hear a cymbal"
-    key = b'ICE'
-    print(encode(repeated_key_xor(pt, key), 'hex'))
-
-if __name__ == '__main__':
-    main()
+print(helpers.encrypt_w_repeated_XOR(plaintext,key))
