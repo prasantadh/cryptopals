@@ -2,7 +2,7 @@ from codecs import encode, decode
 from Crypto.Cipher import AES
 
 def main():
-    with open('7.txt', 'r') as f:
+    with open('07.txt', 'r') as f:
         ct = f.read().replace('\n', '')
     while (len(ct) % 16): ct += '.'
     key = b'YELLOW SUBMARINE'
