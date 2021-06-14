@@ -1,14 +1,18 @@
-from codecs import encode, decode
+# just look for duplicate section of 16 bytes
 
-def main():
-    with open('8.txt', 'r') as f:
-        ct = f.readlines()
-    ct = [decode(bytes(t.strip(), 'utf-8'), 'base64') for t in ct]
-    blocks = lambda t : [t[i:i+16] for i in range(0, len(t), 16)]
-    has_duplicates = lambda l: len(l) != len(set(l)) 
-    ans = [t for t in ct if has_duplicates(blocks(t))][0]
-    for block in blocks(ans):
-        print(encode(block, 'hex'))
+with open('08.txt', 'rb') as f:
+    ciphertexts = f.readlines()
+    ciphertexts = [line.strip() for line in ciphertexts]
 
-if __name__=='__main__':
-    main()
+for ciphertext in ciphertexts:
+    blocks = []
+    for i in range(0, len(ciphertext), 32):
+        blocks.append(ciphertext[i:i+32])
+
+    for i in range(len(blocks)):
+        for j in range(i + 1, len(blocks)):
+            if blocks[i] == blocks[j]:
+                print("Found a match: ", blocks[i], blocks[j])
+                print("Full ciphertext: ", ciphertext)
+                exit(0)
+
