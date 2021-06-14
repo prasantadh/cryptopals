@@ -1,20 +1,12 @@
-"""
-from codecs import encode, decode
-from Crypto.Util.strxor import strxor
-from struct import pack, unpack
-from challenge3 import single_byte_xor
-from challenge5 import repeated_key_xor
-"""
+from cryptopals import helpers
 
 NKEYS = 3           # number of keysizes to try # currently disabled
 KEYSIZE_MIN = 2     # minimum key length to guess
 KEYSIZE_MAX = 40    # maximum key length to guess
 
-from cryptopals import helpers
-
 assert helpers.edit_distance('this is a test', 'wokka wokka!!!') == 37, "Oops!"
 
-with open('6.txt', 'rb') as f:
+with open('06.txt', 'rb') as f:
     ciphertext = f.read().strip()
 from base64 import b64decode
 ciphertext = b64decode(ciphertext)

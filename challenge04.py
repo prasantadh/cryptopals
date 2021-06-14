@@ -1,6 +1,6 @@
 from cryptopals import helpers
 
-with open('4.txt', 'r') as f:
+with open('04.txt', 'r') as f:
     ciphertexts = f.readlines()
 
 scores = []
