@@ -124,7 +124,7 @@ def edit_distance(x: bytes, y: bytes) -> int:
 """
 Bruteforce XOR of a string and a single byte key
 @input:
-    ciphertext [bytes]: a hex string
+    ciphertext [bytes]: a bytes string
     N: number of guessed plaintexts to return
 @return:
     (int, bytes, int): score, plaintext, associated-key
@@ -138,3 +138,23 @@ def brute_single_byte_xor(ciphertext, N = 5):
     scores.sort(reverse=True)
 
     return scores[:N]
+
+"""
+Implement PKCS padding
+@input:
+    ciphertext [bytes]: a bytes string
+    N [int]: number to bytes to align with
+@return:
+    [bytes]: ciphertext but now padded according to PKCS#7 padding
+"""
+def pad(ciphertext: bytes, N: int = 16) -> bytes:
+
+    assert 1 <= N <= 256, "Oops! can only pad between 1 to 256 bytes"
+    assert type(ciphertext) == type(b''), "Oops! ciphertext must be of type bytes"
+
+    n = len(ciphertext)
+
+    n = n % N
+    if n == 0: return ciphertext + bytes([N] * N)
+    padbyte = N - n
+    return ciphertext + bytes([padbyte] * (N - n))
