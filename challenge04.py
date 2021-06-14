@@ -1,15 +1,12 @@
 from cryptopals import helpers
 
 with open('4.txt', 'r') as f:
-    lines = f.readlines()
+    ciphertexts = f.readlines()
 
 scores = []
-for line in lines:
-    for key in range(256):
-        plaintext = helpers.single_byte_xor(line, key)
-        score = helpers.frequency_score(plaintext)
-        if score != 0:
-            scores.append((score, plaintext, key))
+for ciphertext in ciphertexts:
+    ciphertext = bytes.fromhex(ciphertext)
+    scores += helpers.brute_single_byte_xor(ciphertext)
 
 # we could also make one pass and get the max
 # this is safer

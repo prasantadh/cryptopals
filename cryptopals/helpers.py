@@ -24,18 +24,19 @@ def fixedXOR(x, y):
     return hex(int(x, 16) ^ int(y, 16))[2:]
 
 """
-Compute XOR of a hex string and a single byte key
+Compute XOR of a bytes string and a single byte key
 @input:
-    hexstring [string]: a hex string
+    ciphertext [bytes]: a hex string
     key [int]: a single byte key to XOR the hexstring with
 @return:
     [int]: score of the string
 """
-def single_byte_xor(hexstring, key):
+def single_byte_xor(ciphertext: bytes, key: int):
+
+    assert type(ciphertext) == type(b''), "ciphertext must be of class 'bytes'"
     assert type(key) == type(1), "key must be an integer"
     assert 0 <= key <= 255, "key must be between 0 and 255"
 
-    ciphertext = bytes.fromhex(hexstring)
     plaintext = b''
     for i in range(len(ciphertext)):
         plaintext += bytes([ciphertext[i] ^ key])
@@ -79,9 +80,9 @@ Compute repeated key xor value for a string
     plaintext [string]: a string to encrypt
     key [string]: a string to encrypt plaintext with
 @return:
-    [bytes]: plaintext ^ key (repeated) in HEX
+    [bytes]: plaintext ^ key (repeated)
 """
-def encrypt_w_repeated_XOR(plaintext, key):
+def encrypt_w_repeated_xor(plaintext, key):
 
     if type(plaintext) == type(''):
         plaintext = plaintext.encode()
@@ -93,5 +94,47 @@ def encrypt_w_repeated_XOR(plaintext, key):
     for i in range(len(plaintext)):
         ciphertext += bytes([plaintext[i] ^ key[i % len(key)]])
 
-    from codecs import encode
-    return encode(ciphertext, 'hex')
+    return ciphertext
+
+def decrypt_w_repeated_xor(plaintext, key):
+    return encrypt_w_repeated_xor(plaintext, key)
+
+"""
+Compute hamming distance of two strings
+@input:
+    x [string]: a string
+    y [string]: a string
+@return:
+    [int]: hamming distance of x and y
+"""
+def edit_distance(x: bytes, y: bytes) -> int:
+
+    if type(x) == type(''): x = x.encode()
+    if type(y) == type(''): y = y.encode()
+
+    score = 0
+    for i in range(min(len(x), len(y))):
+        temp = x[i] ^ y[i]
+        while temp != 0:
+            score += temp & 1
+            temp >>= 1
+
+    return score
+
+"""
+Bruteforce XOR of a string and a single byte key
+@input:
+    ciphertext [bytes]: a hex string
+    N: number of guessed plaintexts to return
+@return:
+    (int, bytes, int): score, plaintext, associated-key
+"""
+def brute_single_byte_xor(ciphertext, N = 5):
+    scores = []
+    for key in range(256):
+        plaintext = single_byte_xor(ciphertext, key)
+        score = frequency_score(plaintext)
+        scores.append((score, plaintext, key))
+    scores.sort(reverse=True)
+
+    return scores[:N]
